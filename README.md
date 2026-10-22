@@ -135,3 +135,20 @@ I offer fixed-price remote Linux/Docker troubleshooting: a container that won't 
 - **Price:** USD $30–$100 per issue (about ¥99–299). I quote after a short text description of the problem.
 - **How it works:** text communication. You share logs and config, with secrets removed. You get the root cause, the fix steps, and a way to verify the fix.
 - **Contact:** caoyadong888@gmail.com (email only)
+
+## Paid remote help (optional)
+
+Need fixed-price remote troubleshooting for Docker / Compose / Nginx / Linux port issues? Text-only by default (no remote desktop unless agreed).
+
+| Tier | Scope | Price |
+|------|--------|-------|
+| Single clear fault | One container won't start, one published port dead, one Nginx 502 | USD $15 / ¥99 |
+| Linked services | Compose + reverse proxy / multi-container | USD $30 / ¥199 |
+| Complex multi-round | Several services, iterative diagnosis | USD $45 / ¥299 |
+
+**How to order:** email **caoyadong888@gmail.com** with the symptom and redacted logs/config. Free quick look, then confirm price before work.
+
+**Deliverables:** root-cause note, step-by-step fix, and how to verify.  
+**Not included:** unlimited support, long-term ops retainers, guaranteed fix of third-party platform outages, or any circumvention / unlawful use.
+
+This public lab is the sample. Prices above are starter test rates for one clear problem; larger scope is quoted first.
