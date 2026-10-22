@@ -1,0 +1,46 @@
+# Intentional faults for class "container exits or unhealthy".
+# web-exits: nginx is pointed at a config path that is not in the image.
+# web-unhealthy: the process stays up; wget /healthz fails on stock nginx.
+# Hostnames stay on lab.example.com. Ports bind 127.0.0.1 only.
+name: minilab-wont-start
+
+services:
+  web-exits:
+    image: nginx:1.27-alpine
+    hostname: web-exits.lab.example.com
+    container_name: minilab-web-exits
+    command:
+      - nginx
+      - -c
+      - /etc/nginx/broken.conf
+      - -g
+      - daemon off;
+    ports:
+      - "127.0.0.1:18081:80"
+    labels:
+      com.example.minilab.fault-class: container-wont-start
+      com.example.minilab.listen-port: "80"
+    networks:
+      - labnet
+
+  web-unhealthy:
+    image: nginx:1.27-alpine
+    hostname: web-unhealthy.lab.example.com
+    container_name: minilab-web-unhealthy
+    ports:
+      - "127.0.0.1:18083:80"
+    labels:
+      com.example.minilab.fault-class: container-unhealthy
+      com.example.minilab.listen-port: "80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge

@@ -1,0 +1,21 @@
+command=bash check/diagnose.sh --dry-run
+exit=2
+minilab-diagnose version=1.0.0
+mode=dry-run
+writes=none
+scenario=01-container-wont-start service=web-exits class=container-wont-start result=FAULT probe=- expected=ps shows Exited or Restarting; the service does not stay up detail=command -c /etc/nginx/broken.conf has no matching volume; the process exits and Compose does not keep it up
+scenario=01-container-wont-start service=web-unhealthy class=container-unhealthy result=FAULT probe=http://127.0.0.1/healthz expected=ps shows Up (unhealthy) after the healthcheck retries detail=healthcheck wget target contains /healthz; the stock nginx image does not serve that path, so the container becomes unhealthy
+scenario=02-port-connectivity service=web class=port-connectivity result=FAULT probe=http://127.0.0.1:18082/ expected=the container can be running while curl and wget to the published port fail detail=published container port 8080 does not match listen port 80; curl and wget http://127.0.0.1:18082/ fail
+faults=3
+result=FAULT
+command=bash check/diagnose.sh --dry-run --compose lab/01-container-wont-start/compose.fixed.yaml --compose lab/02-port-connectivity/compose.fixed.yaml
+exit=0
+minilab-diagnose version=1.0.0
+mode=dry-run
+writes=none
+scenario=01-container-wont-start service=web-exits class=none result=OK probe=- expected=service stays up on the published loopback port detail=no container, health, or port fault
+scenario=01-container-wont-start service=web-unhealthy class=none result=OK probe=- expected=service stays up on the published loopback port detail=no container, health, or port fault
+scenario=02-port-connectivity service=web class=none result=OK probe=- expected=service stays up on the published loopback port detail=no container, health, or port fault
+faults=0
+result=OK
+demo_result=OK

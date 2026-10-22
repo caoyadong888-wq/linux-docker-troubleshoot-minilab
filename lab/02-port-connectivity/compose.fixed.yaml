@@ -1,0 +1,21 @@
+# Repair for lab/02-port-connectivity/compose.yaml.
+# 127.0.0.1:18082 now forwards to container port 80, where nginx listens.
+name: minilab-port-connectivity
+
+services:
+  web:
+    image: nginx:1.27-alpine
+    hostname: web.lab.example.com
+    container_name: minilab-port-web
+    ports:
+      - "127.0.0.1:18082:80"
+    labels:
+      com.example.minilab.fault-class: none
+      com.example.minilab.listen-port: "80"
+      com.example.minilab.probe-url: http://127.0.0.1:18082/
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge

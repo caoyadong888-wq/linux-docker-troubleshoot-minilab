@@ -1,0 +1,22 @@
+# Intentional fault for class "port connectivity".
+# nginx listens on 80. The published mapping sends 127.0.0.1:18082 to
+# container port 8080, where nothing listens. curl and wget fail.
+name: minilab-port-connectivity
+
+services:
+  web:
+    image: nginx:1.27-alpine
+    hostname: web.lab.example.com
+    container_name: minilab-port-web
+    ports:
+      - "127.0.0.1:18082:8080"
+    labels:
+      com.example.minilab.fault-class: port-connectivity
+      com.example.minilab.listen-port: "80"
+      com.example.minilab.probe-url: http://127.0.0.1:18082/
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge

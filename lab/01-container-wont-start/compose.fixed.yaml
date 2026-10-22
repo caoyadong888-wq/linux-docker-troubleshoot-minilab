@@ -1,0 +1,45 @@
+# Repair for lab/01-container-wont-start/compose.yaml.
+# web-exits uses the image entrypoint and the stock nginx config.
+# web-unhealthy probes http://127.0.0.1/ which stock nginx serves.
+name: minilab-wont-start
+
+services:
+  web-exits:
+    image: nginx:1.27-alpine
+    hostname: web-exits.lab.example.com
+    container_name: minilab-web-exits
+    ports:
+      - "127.0.0.1:18081:80"
+    labels:
+      com.example.minilab.fault-class: none
+      com.example.minilab.listen-port: "80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+    networks:
+      - labnet
+
+  web-unhealthy:
+    image: nginx:1.27-alpine
+    hostname: web-unhealthy.lab.example.com
+    container_name: minilab-web-unhealthy
+    ports:
+      - "127.0.0.1:18083:80"
+    labels:
+      com.example.minilab.fault-class: none
+      com.example.minilab.listen-port: "80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 2s
+    networks:
+      - labnet
+
+networks:
+  labnet:
+    driver: bridge
